@@ -1,0 +1,22 @@
+{
+  "name": "aws-bedrock-buggy-demo",
+  "version": "1.0.0",
+  "description": "A deliberately buggy Node.js/Express demo server that emits realistic errors via Winston for an AI debugging agent to capture and fix.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "keywords": [
+    "demo",
+    "winston",
+    "express",
+    "errors",
+    "ai-agent"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "winston": "^3.13.0"
+  }
+}
