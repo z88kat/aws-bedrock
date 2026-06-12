@@ -1,7 +1,18 @@
-We are attempting to build an AI agent for capturing code errors, checking the GitHub repository code, creating a pull request and suggestion possible fixes / causes for the issues.
+Patchwork - Autonomous Incident-Response Agent
+A real error triggers an agent that diagnoses it, writes a fix, and opens a GitHub PR.
+One Strands agent on AgentCore Runtime + Memory. That's
 
-I need a demo NODE JS application which runs as a server using the winston logging sevice.
+buggy-service (Lambda)
+Small Python app with a real bug. Throws on bad input → logs the traceback.
 
-This application need to fail every 2 minutes or so and throw some random errors allowing us to build an test the AI agent.
+CloudWatch Logs → Subscription Filter
+Matches ERROR / Exception / Traceback. Fires in seconds.
 
-You task is to build a server side applications which contains a number of errors, these errors are written to a log file using winston.
+Dispatcher Lambda
+Parses the error, maps the failing function → (repo, file), then calls invoke_agent_runtime.
+
+Patchwork Agent - Strands + Claude Sonnet 4.6
+Diagnoses root cause → writes a minimal patch → self-reviews its own diff before opening a PR.
+
+GitHub: Pull Request
+The fix, with a root-cause explanation. Opens a draft PR if the agent isn't fully confident.
