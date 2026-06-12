@@ -60,7 +60,7 @@ def handler(event, context):
         {"id": "ord_42", "customer": {"address": {"city": "London"}}}
 
     Guest checkouts arrive as:
-        {"id": "ord_43", "customer": null}   <-- previously triggered the bug
+        {"id": "ord_43", "customer": null}   <-- was triggering the bug
     """
     # API Gateway delivers the order in `body` as a JSON string; direct
     # invocations pass the order as the event itself.
