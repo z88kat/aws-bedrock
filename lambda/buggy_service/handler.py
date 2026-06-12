@@ -35,15 +35,18 @@ def _resolve_rate(city: str) -> float:
     return SHIPPING_RATES["domestic"]
 
 
-# FIX: guard for a missing/None customer and fall back to the standard rate.
 def quote_shipping(order: dict) -> dict:
     customer = order["customer"]
-    if customer is None or customer.get("address") is None:
+
+    # Guard: guest checkouts send `customer: null` (or omit the address).
+    # Fall back to the standard rate rather than crashing.
+    if not customer or not customer.get("address"):
         return {
             "orderId": order.get("id"),
             "city": None,
             "shipping": SHIPPING_RATES["standard"],
         }
+
     city = customer["address"]["city"]
     rate = _resolve_rate(city)
     return {
@@ -60,7 +63,7 @@ def handler(event, context):
         {"id": "ord_42", "customer": {"address": {"city": "London"}}}
 
     Guest checkouts arrive as:
-        {"id": "ord_43", "customer": null}   <-- was triggering the bug
+        {"id": "ord_43", "customer": null}   <-- previously triggered the bug
     """
     # API Gateway delivers the order in `body` as a JSON string; direct
     # invocations pass the order as the event itself.
