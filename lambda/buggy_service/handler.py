@@ -35,18 +35,15 @@ def _resolve_rate(city: str) -> float:
     return SHIPPING_RATES["domestic"]
 
 
+# FIX: guard for a missing/None customer and fall back to the standard rate.
 def quote_shipping(order: dict) -> dict:
     customer = order["customer"]
-
-    # Guard: guest checkouts send `customer: null` (or omit the address).
-    # Fall back to the standard rate rather than crashing.
-    if not customer or not customer.get("address"):
+    if customer is None:
         return {
             "orderId": order.get("id"),
             "city": None,
             "shipping": SHIPPING_RATES["standard"],
         }
-
     city = customer["address"]["city"]
     rate = _resolve_rate(city)
     return {
