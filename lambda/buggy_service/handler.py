@@ -35,10 +35,9 @@ def _resolve_rate(city: str) -> float:
     return SHIPPING_RATES["domestic"]
 
 
-# FIX: guard for a missing/None customer and fall back to the standard
-#   rate instead of assuming an address is present.
+# FIX: guard for a missing/None customer and fall back to the standard rate.
 def quote_shipping(order: dict) -> dict:
-    customer = order.get("customer")
+    customer = order["customer"]
     if customer is None:
         return {
             "orderId": order.get("id"),
